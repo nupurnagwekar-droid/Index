@@ -1,394 +1,722 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Meal Raw Material Entry</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&family=Noto+Serif:wght@700&display=swap" rel="stylesheet"/>
+<title>Navodaya Nutrition Survey</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Merriweather:wght@700&display=swap" rel="stylesheet"/>
 <style>
-  :root {
-    --green: #2e7d32;
-    --green-light: #e8f5e9;
-    --green-mid: #a5d6a7;
-    --accent: #f57f17;
-    --bg: #fafaf7;
-    --border: #c8d8c8;
-    --text: #1a2e1a;
-    --muted: #6a7f6a;
-    --white: #ffffff;
-    --shadow: 0 2px 12px rgba(46,125,50,0.08);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Noto Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+:root {
+  --navy: #1a3557;
+  --blue: #2563a8;
+  --blue-light: #dbeafe;
+  --green: #16a34a;
+  --green-light: #dcfce7;
+  --amber: #d97706;
+  --amber-light: #fef3c7;
+  --border: #cbd5e1;
+  --bg: #f1f5f9;
+  --white: #ffffff;
+  --text: #1e293b;
+  --muted: #64748b;
+  --shadow: 0 2px 16px rgba(26,53,87,0.09);
+  --radius: 10px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Lato', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 15px; }
 
-  header { background: var(--green); color: white; padding: 18px 20px 14px; text-align: center; }
-  header h1 { font-family: 'Noto Serif', serif; font-size: 1.25rem; letter-spacing: 0.01em; }
-  header p { font-size: 0.78rem; opacity: 0.85; margin-top: 4px; }
+/* HEADER */
+header {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+  color: white; padding: 20px 24px 16px; text-align: center;
+}
+header h1 { font-family: 'Merriweather', serif; font-size: 1.2rem; line-height: 1.4; }
+header p { font-size: 0.78rem; opacity: 0.8; margin-top: 5px; }
 
-  /* SETUP BANNER */
-  #setup-banner {
-    background: #fff8e1;
-    border-left: 4px solid var(--accent);
-    margin: 14px 16px 0;
-    border-radius: 8px;
-    padding: 12px 14px;
-    font-size: 0.82rem;
-    line-height: 1.6;
-  }
-  #setup-banner strong { color: var(--accent); }
-  #setup-banner input {
-    width: 100%;
-    margin-top: 8px;
-    padding: 8px 10px;
-    border: 1.5px solid #ffe082;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    font-family: 'Noto Sans', sans-serif;
-    background: white;
-  }
-  #setup-banner input:focus { outline: none; border-color: var(--accent); }
-  .btn-save-url {
-    margin-top: 8px;
-    background: var(--accent);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 7px 16px;
-    font-size: 0.82rem;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: 'Noto Sans', sans-serif;
-  }
-  .btn-save-url:hover { background: #e65100; }
-  #url-status { font-size: 0.78rem; margin-top: 5px; color: var(--green); font-weight: 600; }
+/* SETUP BANNER */
+#setup-banner {
+  background: var(--amber-light); border-left: 4px solid var(--amber);
+  margin: 14px 16px 0; border-radius: var(--radius);
+  padding: 12px 14px; font-size: 0.82rem; line-height: 1.6;
+}
+#setup-banner strong { color: var(--amber); }
+#setup-banner input {
+  width: 100%; margin-top: 6px; padding: 8px 10px;
+  border: 1.5px solid #fcd34d; border-radius: 6px;
+  font-size: 0.84rem; font-family: 'Lato', sans-serif; background: white;
+}
+#setup-banner input:focus { outline: none; border-color: var(--amber); }
+.btn-save-url {
+  margin-top: 7px; background: var(--amber); color: white; border: none;
+  border-radius: 6px; padding: 7px 16px; font-size: 0.82rem; font-weight: 700;
+  cursor: pointer; font-family: 'Lato', sans-serif;
+}
+#url-status { font-size: 0.78rem; margin-top: 5px; font-weight: 600; }
 
-  .container { max-width: 700px; margin: 0 auto; padding: 16px; }
+/* PROGRESS BAR */
+.progress-bar-wrap { background: #e2e8f0; height: 5px; }
+.progress-bar { background: linear-gradient(90deg, var(--blue), var(--green)); height: 5px; transition: width 0.4s; }
+.progress-label { text-align: center; font-size: 0.75rem; color: var(--muted); padding: 5px 0 0; }
 
-  .meta-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-  .field label { display: block; font-size: 0.72rem; font-weight: 600; color: var(--green); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
-  .field select, .field input { width: 100%; padding: 9px 11px; border: 1.5px solid var(--border); border-radius: 7px; font-family: 'Noto Sans', sans-serif; font-size: 0.9rem; background: var(--white); color: var(--text); outline: none; transition: border-color 0.2s; }
-  .field select:focus, .field input:focus { border-color: var(--green); }
+/* CONTAINER */
+.container { max-width: 720px; margin: 0 auto; padding: 16px 16px 100px; }
 
-  .card { background: var(--white); border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; margin-bottom: 16px; }
-  .card-header { background: var(--green); color: white; padding: 10px 16px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
+/* SECTION CARD */
+.section-card {
+  background: var(--white); border-radius: var(--radius);
+  box-shadow: var(--shadow); margin-bottom: 18px; overflow: hidden;
+  display: none;
+}
+.section-card.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-  .entry-table { width: 100%; border-collapse: collapse; }
-  .entry-table thead tr { background: var(--green-light); }
-  .entry-table th { padding: 9px 10px; font-size: 0.72rem; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 2px solid var(--green-mid); text-align: left; white-space: nowrap; }
-  .entry-table td { padding: 5px 6px; border-bottom: 1px solid #eef3ee; vertical-align: middle; }
-  .entry-table tr:last-child td { border-bottom: none; }
-  .entry-table tr:hover td { background: var(--green-light); }
-  .entry-table input[type="text"], .entry-table input[type="number"] {
-    width: 100%; padding: 7px 8px; border: 1.5px solid var(--border); border-radius: 6px;
-    font-family: 'Noto Sans', sans-serif; font-size: 0.85rem; background: transparent; color: var(--text); outline: none; transition: border-color 0.15s, background 0.15s;
-  }
-  .entry-table input:focus { border-color: var(--green); background: var(--white); }
-  .col-item { min-width: 110px; } .col-ingr { min-width: 110px; } .col-qty { width: 80px; } .col-del { width: 36px; text-align: center; }
+.section-header {
+  background: var(--navy); color: white; padding: 12px 18px;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-num {
+  background: rgba(255,255,255,0.2); border-radius: 50%;
+  width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.85rem; flex-shrink: 0;
+}
+.section-header h2 { font-size: 0.95rem; font-weight: 700; line-height: 1.3; }
 
-  .btn-del { background: none; border: none; cursor: pointer; color: #c62828; font-size: 1.1rem; padding: 2px 4px; border-radius: 4px; line-height: 1; transition: background 0.15s; }
-  .btn-del:hover { background: #ffebee; }
+.section-body { padding: 18px; }
 
-  .btn-add-row { display: flex; align-items: center; gap: 6px; background: none; border: 1.5px dashed var(--green-mid); color: var(--green); font-family: 'Noto Sans', sans-serif; font-size: 0.82rem; font-weight: 600; padding: 8px 14px; margin: 8px 10px 10px; border-radius: 7px; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
-  .btn-add-row:hover { background: var(--green-light); border-color: var(--green); }
+/* FIELDS */
+.field { margin-bottom: 14px; }
+.field label {
+  display: block; font-size: 0.72rem; font-weight: 700; color: var(--blue);
+  text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px;
+}
+.field input[type="text"], .field input[type="date"],
+.field input[type="tel"], .field input[type="number"], .field select, .field textarea {
+  width: 100%; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 7px;
+  font-family: 'Lato', sans-serif; font-size: 0.92rem; background: white;
+  color: var(--text); outline: none; transition: border-color 0.2s;
+}
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--blue); }
+.field textarea { resize: vertical; min-height: 60px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-  /* Submit bar */
-  .submit-bar { position: sticky; bottom: 0; background: var(--bg); border-top: 1px solid var(--border); padding: 12px 16px; display: flex; gap: 10px; }
-  .btn-submit { flex: 1; background: var(--green); color: white; border: none; border-radius: 9px; padding: 13px; font-family: 'Noto Serif', serif; font-size: 1rem; font-weight: 700; cursor: pointer; letter-spacing: 0.02em; transition: background 0.2s, transform 0.1s; }
-  .btn-submit:hover { background: #1b5e20; }
-  .btn-submit:active { transform: scale(0.98); }
-  .btn-submit:disabled { background: #aaa; cursor: not-allowed; }
-  .btn-download { background: white; color: var(--green); border: 1.5px solid var(--green); border-radius: 9px; padding: 13px 14px; font-family: 'Noto Sans', sans-serif; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
-  .btn-download:hover { background: var(--green-light); }
-  .btn-clear { background: white; color: var(--muted); border: 1.5px solid var(--border); border-radius: 9px; padding: 13px 12px; font-family: 'Noto Sans', sans-serif; font-size: 0.82rem; cursor: pointer; }
-  .btn-clear:hover { background: #f5f5f5; }
+/* CHECKBOXES */
+.check-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+.check-label {
+  display: flex; align-items: center; gap: 7px; cursor: pointer;
+  background: var(--bg); border: 1.5px solid var(--border); border-radius: 7px;
+  padding: 7px 12px; font-size: 0.88rem; transition: all 0.15s; user-select: none;
+}
+.check-label input { accent-color: var(--blue); width: 16px; height: 16px; cursor: pointer; }
+.check-label:hover { border-color: var(--blue); background: var(--blue-light); }
+.check-label.checked { border-color: var(--blue); background: var(--blue-light); font-weight: 700; }
 
-  /* Spinner */
-  .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px; }
-  @keyframes spin { to { transform: rotate(360deg); } }
+/* RADIO */
+.radio-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.radio-label {
+  display: flex; align-items: center; gap: 7px; cursor: pointer;
+  background: var(--bg); border: 1.5px solid var(--border); border-radius: 7px;
+  padding: 7px 12px; font-size: 0.88rem; transition: all 0.15s; user-select: none;
+}
+.radio-label input { accent-color: var(--blue); width: 16px; height: 16px; cursor: pointer; }
+.radio-label:hover { border-color: var(--blue); background: var(--blue-light); }
+.radio-label.selected { border-color: var(--blue); background: var(--blue-light); font-weight: 700; }
 
-  /* Toast */
-  #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--green); color: white; padding: 12px 24px; border-radius: 30px; font-size: 0.9rem; font-weight: 600; box-shadow: 0 4px 20px rgba(0,0,0,0.15); opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 999; white-space: nowrap; }
-  #toast.show { opacity: 1; }
-  #toast.error { background: #c62828; }
+/* STUDENT TABLE (Q1) */
+.student-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+.student-table th {
+  background: var(--blue-light); color: var(--navy); font-weight: 700;
+  padding: 8px 10px; text-align: left; border-bottom: 2px solid var(--border);
+}
+.student-table td { padding: 5px 8px; border-bottom: 1px solid #f0f4f8; }
+.student-table tr:last-child td { border-bottom: none; }
+.student-table td:first-child { font-weight: 600; color: var(--navy); width: 60px; }
+.student-table input {
+  width: 100%; padding: 6px 8px; border: 1.5px solid var(--border); border-radius: 5px;
+  font-size: 0.88rem; font-family: 'Lato', sans-serif; outline: none;
+}
+.student-table input:focus { border-color: var(--blue); }
 
-  /* Log */
-  #log-section { margin-top: 8px; margin-bottom: 100px; }
-  #log-section h2 { font-family: 'Noto Serif', serif; font-size: 1rem; color: var(--green); margin-bottom: 10px; }
-  .log-card { background: white; border-radius: 10px; box-shadow: var(--shadow); margin-bottom: 10px; overflow: hidden; }
-  .log-card-header { background: var(--green-light); padding: 8px 14px; font-size: 0.8rem; font-weight: 700; color: var(--green); display: flex; justify-content: space-between; }
-  .log-card-header .status { font-size: 0.72rem; font-weight: 600; }
-  .status-saved { color: var(--green); } .status-pending { color: var(--accent); }
-  .log-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
-  .log-table th { padding: 6px 10px; background: #f1f8f1; color: var(--muted); font-weight: 600; text-align: left; border-bottom: 1px solid var(--border); }
-  .log-table td { padding: 6px 10px; border-bottom: 1px solid #f0f0f0; }
-  .log-table tr:last-child td { border-bottom: none; }
-  .empty-log { color: var(--muted); font-size: 0.85rem; text-align: center; padding: 20px; }
+/* MEAL TABLE (Q3) */
+.meal-section-title {
+  background: var(--blue-light); color: var(--navy); font-weight: 700;
+  padding: 8px 12px; border-radius: 6px; margin-bottom: 10px; font-size: 0.85rem;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.entry-table { width: 100%; border-collapse: collapse; margin-bottom: 6px; }
+.entry-table th {
+  background: #f8fafc; font-size: 0.7rem; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.05em; padding: 7px 8px;
+  border-bottom: 2px solid var(--border); text-align: left;
+}
+.entry-table td { padding: 4px 5px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+.entry-table tr:last-child td { border-bottom: none; }
+.entry-table input[type="text"], .entry-table input[type="number"] {
+  width: 100%; padding: 6px 7px; border: 1.5px solid var(--border); border-radius: 5px;
+  font-family: 'Lato', sans-serif; font-size: 0.84rem; outline: none; background: white;
+}
+.entry-table input:focus { border-color: var(--blue); background: #f0f7ff; }
+.col-item { min-width: 100px; } .col-ingr { min-width: 100px; } .col-qty { width: 70px; } .col-del { width: 32px; text-align: center; }
+.btn-del { background: none; border: none; cursor: pointer; color: #dc2626; font-size: 1rem; padding: 2px; border-radius: 4px; line-height: 1; }
+.btn-del:hover { background: #fee2e2; }
+.btn-add-row {
+  display: inline-flex; align-items: center; gap: 5px; background: none;
+  border: 1.5px dashed var(--border); color: var(--blue);
+  font-family: 'Lato', sans-serif; font-size: 0.8rem; font-weight: 700;
+  padding: 6px 12px; margin-top: 6px; border-radius: 6px; cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-add-row:hover { background: var(--blue-light); border-color: var(--blue); }
+.meal-block { margin-bottom: 20px; }
 
-  @media (max-width: 480px) {
-    .meta-row { grid-template-columns: 1fr; }
-    .entry-table th, .entry-table td { padding: 5px 4px; }
-    .col-item, .col-ingr { min-width: 90px; }
-  }
+/* FREQUENCY TABLE (Q4) */
+.freq-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.freq-table th {
+  background: var(--blue-light); color: var(--navy); font-weight: 700;
+  padding: 7px 8px; text-align: center; border: 1px solid var(--border);
+  font-size: 0.75rem;
+}
+.freq-table th:first-child { text-align: left; min-width: 110px; }
+.freq-table td { padding: 5px 6px; border: 1px solid #e2e8f0; text-align: center; }
+.freq-table td:first-child { text-align: left; font-weight: 600; }
+.freq-table tr:nth-child(even) td { background: #f8fafc; }
+.freq-table input[type="radio"] { accent-color: var(--blue); width: 15px; height: 15px; cursor: pointer; }
+.freq-table input[type="text"] {
+  width: 90%; padding: 4px 6px; border: 1.5px solid var(--border); border-radius: 5px;
+  font-size: 0.8rem; font-family: 'Lato', sans-serif; outline: none;
+}
+.freq-table input[type="text"]:focus { border-color: var(--blue); }
+
+/* NAV BUTTONS */
+.nav-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--white); border-top: 1px solid var(--border);
+  padding: 12px 16px; display: flex; gap: 10px; max-width: 720px; margin: 0 auto;
+}
+.btn-back {
+  background: white; color: var(--muted); border: 1.5px solid var(--border);
+  border-radius: 9px; padding: 12px 18px; font-family: 'Lato', sans-serif;
+  font-size: 0.9rem; cursor: pointer; transition: background 0.15s;
+}
+.btn-back:hover { background: var(--bg); }
+.btn-next {
+  flex: 1; background: var(--blue); color: white; border: none;
+  border-radius: 9px; padding: 12px; font-family: 'Merriweather', serif;
+  font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: background 0.2s, transform 0.1s;
+}
+.btn-next:hover { background: var(--navy); }
+.btn-next:active { transform: scale(0.98); }
+.btn-next:disabled { background: #94a3b8; cursor: not-allowed; }
+.btn-submit-final {
+  flex: 1; background: var(--green); color: white; border: none;
+  border-radius: 9px; padding: 12px; font-family: 'Merriweather', serif;
+  font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: background 0.2s;
+}
+.btn-submit-final:hover { background: #15803d; }
+.btn-download {
+  background: white; color: var(--green); border: 1.5px solid var(--green);
+  border-radius: 9px; padding: 12px 14px; font-family: 'Lato', sans-serif;
+  font-size: 0.82rem; font-weight: 700; cursor: pointer; white-space: nowrap;
+}
+.btn-download:hover { background: var(--green-light); }
+
+/* SPINNER */
+.spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 5px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* TOAST */
+#toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--navy); color: white; padding: 12px 22px; border-radius: 30px; font-size: 0.88rem; font-weight: 700; box-shadow: 0 4px 20px rgba(0,0,0,0.15); opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 9999; white-space: nowrap; }
+#toast.show { opacity: 1; }
+#toast.error { background: #dc2626; }
+#toast.success { background: var(--green); }
+
+/* SUCCESS SCREEN */
+#success-screen { display: none; text-align: center; padding: 40px 20px; }
+#success-screen .tick { font-size: 3.5rem; }
+#success-screen h2 { font-family: 'Merriweather', serif; color: var(--navy); margin: 12px 0 8px; }
+#success-screen p { color: var(--muted); font-size: 0.9rem; margin-bottom: 20px; }
+.btn-new { background: var(--blue); color: white; border: none; border-radius: 9px; padding: 12px 28px; font-family: 'Lato', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; }
+
+@media (max-width: 480px) {
+  .field-row { grid-template-columns: 1fr; }
+  .entry-table th, .entry-table td { padding: 4px 3px; }
+  .col-item, .col-ingr { min-width: 80px; }
+  .freq-table { font-size: 0.74rem; }
+  .freq-table th, .freq-table td { padding: 4px 4px; }
+}
 </style>
 </head>
 <body>
 
 <header>
-  <h1>🍱 Meal Raw Material Entry</h1>
-  <p>Residential School — Daily Record</p>
+  <h1>🏫 Nutritional Assessment<br/>Navodaya School</h1>
+  <p>Supervisor / Teacher Survey Form</p>
 </header>
 
 <!-- Setup Banner -->
 <div id="setup-banner">
-  <strong>⚙️ One-time setup:</strong> Paste your Google Apps Script Web App URL below so submissions are saved to your Google Sheet automatically.
-  <input type="text" id="script-url-input" placeholder="https://script.google.com/macros/s/YOUR_ID/exec" />
-  <br/>
-  <button class="btn-save-url" onclick="saveScriptUrl()">Save URL</button>
+  <strong>⚙️ One-time setup:</strong> Paste your Google Apps Script Web App URL to auto-save responses to your Google Sheet.
+  <input type="text" id="script-url-input" placeholder="https://script.google.com/macros/s/YOUR_ID/exec"/>
+  <br/><button class="btn-save-url" onclick="saveScriptUrl()">Save URL</button>
   <div id="url-status"></div>
 </div>
 
+<!-- Progress -->
+<div class="progress-bar-wrap">
+  <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+</div>
+<div class="progress-label" id="progress-label">Step 1 of 5</div>
+
 <div class="container">
 
-  <div style="margin-top:16px;">
-    <div class="meta-row">
-      <div class="field">
-        <label>Day</label>
-        <select id="meta-day">
-          <option value="">Select day</option>
-          <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
-          <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
-        </select>
+  <!-- ── SECTION 0: Basic Info ── -->
+  <div class="section-card active" id="sec-0">
+    <div class="section-header">
+      <div class="section-num">①</div>
+      <h2>Basic Information</h2>
+    </div>
+    <div class="section-body">
+      <div class="field-row">
+        <div class="field"><label>Date</label><input type="date" id="f-date"/></div>
+        <div class="field"><label>Phone No.</label><input type="tel" id="f-phone" placeholder="e.g. 9876543210"/></div>
       </div>
-      <div class="field">
-        <label>Meal</label>
-        <select id="meta-meal">
-          <option value="">Select meal</option>
-          <option>Breakfast</option><option>Lunch</option><option>Dinner</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>No. of Students</label>
-        <input type="number" id="meta-students" placeholder="e.g. 200" min="1"/>
-      </div>
-      <div class="field">
-        <label>School / Respondent</label>
-        <input type="text" id="meta-school" placeholder="Name or school"/>
-      </div>
+      <div class="field"><label>School Name</label><input type="text" id="f-school" placeholder="Enter school name"/></div>
+      <div class="field"><label>Location</label><input type="text" id="f-location" placeholder="District, State"/></div>
+      <div class="field"><label>Teacher / Supervisor Name</label><input type="text" id="f-teacher" placeholder="Full name"/></div>
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-header">
-      <span>Ingredients Used</span>
-      <span style="opacity:0.7;font-size:0.72rem;">one row per ingredient</span>
+  <!-- ── SECTION 1: Student Details ── -->
+  <div class="section-card" id="sec-1">
+    <div class="section-header">
+      <div class="section-num">②</div>
+      <h2>Q1. Details of Children (Class-wise)</h2>
     </div>
-    <div style="overflow-x:auto;">
-      <table class="entry-table" id="entry-table">
-        <thead>
-          <tr>
-            <th class="col-item">Item (Dish)</th>
-            <th class="col-ingr">Ingredient</th>
-            <th class="col-qty">Qty (kg)</th>
-            <th class="col-del"></th>
-          </tr>
-        </thead>
-        <tbody id="entry-body"></tbody>
+    <div class="section-body">
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:12px;">Enter the number of girl and boy students currently enrolled in each class.</p>
+      <table class="student-table">
+        <thead><tr><th>Class</th><th>No. of Girls</th><th>No. of Boys</th></tr></thead>
+        <tbody id="student-tbody">
+          <!-- generated by JS -->
+        </tbody>
       </table>
     </div>
-    <button class="btn-add-row" onclick="addRow()">＋ Add Ingredient Row</button>
   </div>
 
-  <div id="log-section">
-    <h2>📋 This Session's Entries</h2>
-    <div id="log-container"><p class="empty-log">No entries yet.</p></div>
+  <!-- ── SECTION 2: Meals Served ── -->
+  <div class="section-card" id="sec-2">
+    <div class="section-header">
+      <div class="section-num">③</div>
+      <h2>Q2. Meals Served by School / Hostel</h2>
+    </div>
+    <div class="section-body">
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:12px;">Please tick all that apply.</p>
+      <div class="check-group" id="meals-check">
+        <label class="check-label"><input type="checkbox" value="Breakfast" onchange="toggleCheck(this)"/> Breakfast</label>
+        <label class="check-label"><input type="checkbox" value="Lunch" onchange="toggleCheck(this)"/> Lunch</label>
+        <label class="check-label"><input type="checkbox" value="Snack" onchange="toggleCheck(this)"/> Snack</label>
+        <label class="check-label"><input type="checkbox" value="Dinner" onchange="toggleCheck(this)"/> Dinner</label>
+      </div>
+    </div>
   </div>
 
-</div>
+  <!-- ── SECTION 3: Weekly Meal Details ── -->
+  <div class="section-card" id="sec-3">
+    <div class="section-header">
+      <div class="section-num">④</div>
+      <h2>Q3. Foods Cooked & Served Last Week</h2>
+    </div>
+    <div class="section-body">
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:14px;">For each day and meal, add one row per ingredient. Fill as many days as applicable.</p>
+      <div id="meal-blocks"><!-- generated by JS --></div>
+    </div>
+  </div>
 
-<div class="submit-bar">
-  <button class="btn-clear" onclick="clearForm()">Clear</button>
+  <!-- ── SECTION 4: Additional Foods ── -->
+  <div class="section-card" id="sec-4">
+    <div class="section-header">
+      <div class="section-num">⑤</div>
+      <h2>Q4. Additional Foods Provided</h2>
+    </div>
+    <div class="section-body">
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:12px;">How frequently are these foods provided to students?</p>
+      <div style="overflow-x:auto;">
+        <table class="freq-table" id="freq-table">
+          <thead>
+            <tr>
+              <th>Food Item</th>
+              <th>Daily</th>
+              <th>4–6×/week</th>
+              <th>2–3×/week</th>
+              <th>Once/week</th>
+              <th>Never</th>
+            </tr>
+          </thead>
+          <tbody id="freq-tbody"><!-- generated by JS --></tbody>
+        </table>
+      </div>
+
+      <div style="margin-top:16px;">
+        <label style="font-size:0.72rem;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px;">Q5. Are students given Iron-Folic Acid tablets?</label>
+        <div class="radio-group" id="ifa-radio">
+          <label class="radio-label"><input type="radio" name="ifa" value="Yes, everyday" onchange="toggleRadio(this)"/> Yes, everyday</label>
+          <label class="radio-label"><input type="radio" name="ifa" value="Yes, sometimes" onchange="toggleRadio(this)"/> Yes, sometimes</label>
+          <label class="radio-label"><input type="radio" name="ifa" value="Yes, once or twice in lifetime" onchange="toggleRadio(this)"/> Yes, once or twice</label>
+          <label class="radio-label"><input type="radio" name="ifa" value="No, never" onchange="toggleRadio(this)"/> No, never</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success screen -->
+  <div id="success-screen">
+    <div class="tick">✅</div>
+    <h2>Survey Submitted!</h2>
+    <p>Your response has been recorded.<br/>Use the button below to download a CSV backup.</p>
+    <button class="btn-new" onclick="resetForm()">Submit Another Response</button>
+  </div>
+
+</div><!-- /container -->
+
+<!-- Nav Bar -->
+<div class="nav-bar" id="nav-bar">
+  <button class="btn-back" id="btn-back" onclick="goBack()" style="display:none">← Back</button>
   <button class="btn-download" onclick="downloadCSV()">⬇ CSV</button>
-  <button class="btn-submit" id="submit-btn" onclick="submitEntry()">✓ Submit</button>
+  <button class="btn-next" id="btn-next" onclick="goNext()">Next →</button>
 </div>
 
 <div id="toast"></div>
 
+<datalist id="dl-dishes"><option value="Idli"/><option value="Sambar"/><option value="Chutney"/><option value="Chapati"/><option value="Mix Veg Sabji"/><option value="Rice"/><option value="Vegetable Khichdi"/><option value="Papad"/><option value="Dal"/><option value="Poha"/><option value="Upma"/><option value="Puri"/><option value="Kheer"/><option value="Rasam"/><option value="Curd Rice"/></datalist>
+<datalist id="dl-ingr"><option value="Rice"/><option value="Urad Dal"/><option value="Toor Dal"/><option value="Wheat Flour"/><option value="Oil"/><option value="Carrot"/><option value="Pumpkin"/><option value="Sambar Powder"/><option value="Coconut"/><option value="Curd"/><option value="Coriander"/><option value="Potato"/><option value="Cauliflower"/><option value="Green Peas"/><option value="Onion"/><option value="Tomato"/><option value="Beans"/><option value="Salt"/><option value="Turmeric"/><option value="Mustard Seeds"/><option value="Ghee"/></datalist>
+
 <script>
-  const DISHES = ['Idli','Sambar','Chutney','Chapati','Mix Veg Sabji','Rice','Vegetable Khichdi','Papad','Dal','Poha','Upma','Puri','Kheer'];
-  const INGREDIENTS = ['Rice','Urad Dal','Toor Dal','Wheat Flour','Oil','Carrot','Pumpkin','Sambar Powder','Coconut','Curd','Coriander','Potato','Cauliflower','Green Peas','Onion','Tomato','Beans','Salt','Turmeric'];
+// ── CONFIG ──────────────────────────────────────────────────────────
+const TOTAL_SECTIONS = 5;
+let currentSection = 0;
+let SCRIPT_URL = localStorage.getItem('nutrition_script_url') || '';
+let allSubmissions = [];
 
-  let rowCount = 0;
-  let submissions = [];
-  let SCRIPT_URL = localStorage.getItem('meal_script_url') || '';
+const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const MEALS = ['Breakfast','Lunch','Snack','Dinner'];
+const CLASSES = ['1st','2nd','3rd','4th','5th','6th','7th','8th','9th','10th'];
+const FREQ_ITEMS = ['Ladoo','Non-veg items','Egg','Fish','Chicken','Fried snacks'];
+const FREQ_COLS = ['Daily','4-6 times a week','2-3 times a week','Once a week','Never'];
+let mealRowCounts = {};
 
-  // Init URL display
-  window.addEventListener('DOMContentLoaded', () => {
-    if (SCRIPT_URL) {
-      document.getElementById('script-url-input').value = SCRIPT_URL;
-      document.getElementById('url-status').textContent = '✅ URL saved. Submissions will go to your Google Sheet.';
-      document.getElementById('setup-banner').style.borderColor = '#a5d6a7';
+// ── INIT ─────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  if (SCRIPT_URL) {
+    document.getElementById('script-url-input').value = SCRIPT_URL;
+    document.getElementById('url-status').textContent = '✅ URL saved.';
+    document.getElementById('url-status').style.color = 'green';
+  }
+  buildStudentTable();
+  buildMealBlocks();
+  buildFreqTable();
+  updateProgress();
+});
+
+function saveScriptUrl() {
+  const val = document.getElementById('script-url-input').value.trim();
+  if (!val.startsWith('https://script.google.com')) {
+    document.getElementById('url-status').textContent = '⚠️ Invalid URL.';
+    document.getElementById('url-status').style.color = '#dc2626';
+    return;
+  }
+  SCRIPT_URL = val;
+  localStorage.setItem('nutrition_script_url', SCRIPT_URL);
+  document.getElementById('url-status').textContent = '✅ URL saved!';
+  document.getElementById('url-status').style.color = 'green';
+}
+
+// ── BUILD STUDENT TABLE ──────────────────────────────────────────────
+function buildStudentTable() {
+  const tbody = document.getElementById('student-tbody');
+  tbody.innerHTML = CLASSES.map(cls => `
+    <tr>
+      <td>${cls}</td>
+      <td><input type="number" min="0" placeholder="0" id="girls-${cls}"/></td>
+      <td><input type="number" min="0" placeholder="0" id="boys-${cls}"/></td>
+    </tr>
+  `).join('');
+}
+
+// ── BUILD MEAL BLOCKS ────────────────────────────────────────────────
+function buildMealBlocks() {
+  const container = document.getElementById('meal-blocks');
+  container.innerHTML = '';
+  DAYS.forEach(day => {
+    MEALS.forEach(meal => {
+      const key = `${day}-${meal}`;
+      mealRowCounts[key] = 0;
+      container.innerHTML += `
+        <div class="meal-block">
+          <div class="meal-section-title">
+            <span>📅 ${day} — ${meal}</span>
+            <span style="font-size:0.75rem;font-weight:400;opacity:0.7;">Students: <input type="number" id="students-${key}" min="0" placeholder="0" style="width:60px;padding:2px 5px;border:1px solid #93c5fd;border-radius:4px;font-size:0.8rem;background:rgba(255,255,255,0.7)"/></span>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="entry-table">
+              <thead><tr><th class="col-item">Item (Dish)</th><th class="col-ingr">Ingredient</th><th class="col-qty">Qty (kg)</th><th class="col-del"></th></tr></thead>
+              <tbody id="tbody-${key}"></tbody>
+            </table>
+          </div>
+          <button class="btn-add-row" onclick="addMealRow('${key}')">＋ Add row</button>
+        </div>
+      `;
+    });
+  });
+  // Add 2 default rows for Monday Breakfast
+  addMealRow('Monday-Breakfast');
+  addMealRow('Monday-Breakfast');
+}
+
+function addMealRow(key, dish='', ingr='', qty='') {
+  mealRowCounts[key] = (mealRowCounts[key] || 0) + 1;
+  const id = `${key}-${mealRowCounts[key]}`;
+  const tbody = document.getElementById(`tbody-${key}`);
+  const tr = document.createElement('tr');
+  tr.id = 'mrow-' + id;
+  tr.innerHTML = `
+    <td class="col-item"><input type="text" list="dl-dishes" placeholder="e.g. Idli" value="${dish}"/></td>
+    <td class="col-ingr"><input type="text" list="dl-ingr" placeholder="e.g. Rice" value="${ingr}"/></td>
+    <td class="col-qty"><input type="number" min="0" step="0.1" placeholder="0.0" value="${qty}"/></td>
+    <td class="col-del"><button class="btn-del" onclick="document.getElementById('mrow-${id}').remove()">✕</button></td>
+  `;
+  tbody.appendChild(tr);
+}
+
+// ── BUILD FREQUENCY TABLE ────────────────────────────────────────────
+function buildFreqTable() {
+  const tbody = document.getElementById('freq-tbody');
+  let rows = FREQ_ITEMS.map(item => freqRow(item, item));
+  // 3 custom "Anything more" rows
+  rows.push(freqRow('custom1', '', true));
+  rows.push(freqRow('custom2', '', true));
+  rows.push(freqRow('custom3', '', true));
+  tbody.innerHTML = rows.join('');
+}
+
+function freqRow(id, label, isCustom=false) {
+  const labelCell = isCustom
+    ? `<input type="text" placeholder="Other item..." id="freq-label-${id}" style="width:100%;padding:4px 6px;border:1.5px solid #cbd5e1;border-radius:5px;font-size:0.8rem;"/>`
+    : `<strong>${label}</strong>`;
+  return `<tr>
+    <td>${labelCell}</td>
+    ${FREQ_COLS.map(col => `<td><input type="radio" name="freq-${id}" value="${col}"/></td>`).join('')}
+  </tr>`;
+}
+
+// ── CHECKBOX / RADIO STYLE TOGGLE ────────────────────────────────────
+function toggleCheck(el) {
+  el.closest('.check-label').classList.toggle('checked', el.checked);
+}
+function toggleRadio(el) {
+  document.querySelectorAll(`input[name="${el.name}"]`).forEach(r => {
+    r.closest('.radio-label').classList.remove('selected');
+  });
+  el.closest('.radio-label').classList.add('selected');
+}
+
+// ── NAVIGATION ───────────────────────────────────────────────────────
+function updateProgress() {
+  const pct = Math.round((currentSection / (TOTAL_SECTIONS - 1)) * 100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `Step ${currentSection + 1} of ${TOTAL_SECTIONS}`;
+  document.getElementById('btn-back').style.display = currentSection > 0 ? 'block' : 'none';
+  const nextBtn = document.getElementById('btn-next');
+  if (currentSection === TOTAL_SECTIONS - 1) {
+    nextBtn.outerHTML = `<button class="btn-submit-final" id="btn-next" onclick="submitForm()">✓ Submit Survey</button>`;
+  } else {
+    const el = document.getElementById('btn-next');
+    if (el && el.className !== 'btn-next') {
+      el.outerHTML = `<button class="btn-next" id="btn-next" onclick="goNext()">Next →</button>`;
     }
-    makeDatalist('dl-dishes', DISHES);
-    makeDatalist('dl-ingr', INGREDIENTS);
-    addRow(); addRow(); addRow();
+  }
+}
+
+function showSection(idx) {
+  document.querySelectorAll('.section-card').forEach(c => c.classList.remove('active'));
+  const sec = document.getElementById('sec-' + idx);
+  if (sec) sec.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goNext() {
+  if (currentSection < TOTAL_SECTIONS - 1) {
+    currentSection++;
+    showSection(currentSection);
+    updateProgress();
+  }
+}
+
+function goBack() {
+  if (currentSection > 0) {
+    currentSection--;
+    showSection(currentSection);
+    updateProgress();
+  }
+}
+
+// ── COLLECT DATA ──────────────────────────────────────────────────────
+function collectData() {
+  const data = {
+    date: document.getElementById('f-date').value,
+    school: document.getElementById('f-school').value,
+    location: document.getElementById('f-location').value,
+    teacher: document.getElementById('f-teacher').value,
+    phone: document.getElementById('f-phone').value,
+    mealsServed: [...document.querySelectorAll('#meals-check input:checked')].map(c => c.value).join(', '),
+    students: {},
+    mealData: [],
+    additionalFoods: [],
+    ifaTablets: document.querySelector('input[name="ifa"]:checked')?.value || ''
+  };
+
+  // Student counts
+  CLASSES.forEach(cls => {
+    data.students[cls] = {
+      girls: document.getElementById('girls-' + cls)?.value || '',
+      boys: document.getElementById('boys-' + cls)?.value || ''
+    };
   });
 
-  function saveScriptUrl() {
-    const val = document.getElementById('script-url-input').value.trim();
-    if (!val.startsWith('https://script.google.com')) {
-      document.getElementById('url-status').textContent = '⚠️ That doesn\'t look like a valid Apps Script URL.';
-      document.getElementById('url-status').style.color = '#c62828';
-      return;
-    }
-    SCRIPT_URL = val;
-    localStorage.setItem('meal_script_url', SCRIPT_URL);
-    document.getElementById('url-status').textContent = '✅ URL saved!';
-    document.getElementById('url-status').style.color = '#2e7d32';
-    document.getElementById('setup-banner').style.borderColor = '#a5d6a7';
-  }
-
-  function makeDatalist(id, items) {
-    if (document.getElementById(id)) return;
-    const dl = document.createElement('datalist');
-    dl.id = id;
-    items.forEach(i => { const o = document.createElement('option'); o.value = i; dl.appendChild(o); });
-    document.body.appendChild(dl);
-  }
-
-  function addRow(dish='', ingredient='', qty='') {
-    rowCount++;
-    const tbody = document.getElementById('entry-body');
-    const tr = document.createElement('tr');
-    tr.id = 'row-' + rowCount;
-    tr.innerHTML = `
-      <td class="col-item"><input type="text" list="dl-dishes" placeholder="e.g. Idli" value="${dish}" /></td>
-      <td class="col-ingr"><input type="text" list="dl-ingr" placeholder="e.g. Rice" value="${ingredient}" /></td>
-      <td class="col-qty"><input type="number" min="0" step="0.1" placeholder="0.0" value="${qty}" /></td>
-      <td class="col-del"><button class="btn-del" onclick="deleteRow('row-${rowCount}')" title="Remove">✕</button></td>
-    `;
-    tbody.appendChild(tr);
-    tr.querySelector('input').focus();
-  }
-
-  function deleteRow(id) { const r = document.getElementById(id); if (r) r.remove(); }
-
-  function clearForm() {
-    document.getElementById('meta-day').value = '';
-    document.getElementById('meta-meal').value = '';
-    document.getElementById('meta-students').value = '';
-    document.getElementById('meta-school').value = '';
-    document.getElementById('entry-body').innerHTML = '';
-    rowCount = 0;
-    addRow(); addRow(); addRow();
-  }
-
-  function collectRows() {
-    const rows = document.querySelectorAll('#entry-body tr');
-    let entries = [], hasError = false;
-    rows.forEach(row => {
-      const inputs = row.querySelectorAll('input');
-      const item = inputs[0].value.trim();
-      const ingr = inputs[1].value.trim();
-      const qty  = inputs[2].value.trim();
-      if (!item || !ingr || !qty) { hasError = true; return; }
-      entries.push({ item, ingredient: ingr, qty: parseFloat(qty) });
-    });
-    return { entries, hasError };
-  }
-
-  async function submitEntry() {
-    const day      = document.getElementById('meta-day').value;
-    const meal     = document.getElementById('meta-meal').value;
-    const students = document.getElementById('meta-students').value;
-    const school   = document.getElementById('meta-school').value.trim();
-
-    if (!day || !meal || !students) { showToast('⚠️ Fill in Day, Meal and No. of Students', true); return; }
-    const { entries, hasError } = collectRows();
-    if (entries.length === 0) { showToast('⚠️ Add at least one ingredient row', true); return; }
-    if (hasError) { showToast('⚠️ Some rows are incomplete — check all fields', true); return; }
-
-    const submission = { day, meal, students, school, entries, time: new Date().toLocaleTimeString(), status: 'pending' };
-
-    // Send to Google Sheet if URL is set
-    if (SCRIPT_URL) {
-      const btn = document.getElementById('submit-btn');
-      btn.disabled = true;
-      btn.innerHTML = '<span class="spinner"></span>Saving…';
-      try {
-        // Send one row per ingredient to the sheet
-        for (const e of entries) {
-          await fetch(SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              timestamp: new Date().toISOString(),
-              school: school || '—',
-              day, meal, students,
-              item: e.item,
-              ingredient: e.ingredient,
-              qty: e.qty
-            })
-          });
+  // Meal rows
+  DAYS.forEach(day => {
+    MEALS.forEach(meal => {
+      const key = `${day}-${meal}`;
+      const students = document.getElementById(`students-${key}`)?.value || '';
+      const rows = document.querySelectorAll(`#tbody-${key} tr`);
+      rows.forEach(row => {
+        const inputs = row.querySelectorAll('input');
+        const item = inputs[0]?.value.trim();
+        const ingr = inputs[1]?.value.trim();
+        const qty  = inputs[2]?.value.trim();
+        if (item || ingr || qty) {
+          data.mealData.push({ day, meal, students, item, ingredient: ingr, qty });
         }
-        submission.status = 'saved';
-        showToast('✅ Saved to Google Sheet!');
-      } catch (err) {
-        submission.status = 'pending';
-        showToast('⚠️ Sheet unavailable — entry kept locally', true);
-      }
-      btn.disabled = false;
-      btn.innerHTML = '✓ Submit';
-    } else {
-      showToast('✅ Entry saved locally (set Sheet URL to sync)');
-    }
-
-    submissions.push(submission);
-    renderLog();
-    clearForm();
-  }
-
-  function downloadCSV() {
-    if (submissions.length === 0) { showToast('⚠️ No entries to download yet', true); return; }
-    let csv = 'Timestamp,School,Day,Meal,Students,Item,Ingredient,Qty(kg),Status\n';
-    submissions.forEach(s => {
-      s.entries.forEach(e => {
-        csv += `"${s.time}","${s.school||''}","${s.day}","${s.meal}","${s.students}","${e.item}","${e.ingredient}","${e.qty}","${s.status}"\n`;
       });
     });
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `meal_record_${new Date().toLocaleDateString('en-IN').replace(/\//g,'-')}.csv`;
-    a.click();
+  });
+
+  // Frequency table
+  const freqIds = [...FREQ_ITEMS.map(i => i), 'custom1', 'custom2', 'custom3'];
+  freqIds.forEach(id => {
+    const checked = document.querySelector(`input[name="freq-${id}"]:checked`);
+    const labelEl = document.getElementById('freq-label-' + id);
+    const label = labelEl ? labelEl.value : id;
+    if (checked || label) {
+      data.additionalFoods.push({ item: label || id, frequency: checked?.value || '' });
+    }
+  });
+
+  return data;
+}
+
+// ── SUBMIT ────────────────────────────────────────────────────────────
+async function submitForm() {
+  const data = collectData();
+  data.submittedAt = new Date().toISOString();
+  allSubmissions.push(data);
+
+  const btn = document.getElementById('btn-next');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Submitting…';
+
+  if (SCRIPT_URL) {
+    try {
+      // Send basic info + each meal row
+      const basePayload = {
+        submittedAt: data.submittedAt,
+        school: data.school,
+        location: data.location,
+        teacher: data.teacher,
+        phone: data.phone,
+        date: data.date,
+        mealsServed: data.mealsServed,
+        ifaTablets: data.ifaTablets,
+        studentCounts: JSON.stringify(data.students),
+        additionalFoods: JSON.stringify(data.additionalFoods)
+      };
+
+      if (data.mealData.length > 0) {
+        for (const row of data.mealData) {
+          await fetch(SCRIPT_URL, {
+            method: 'POST', mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...basePayload, ...row })
+          });
+        }
+      } else {
+        await fetch(SCRIPT_URL, {
+          method: 'POST', mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(basePayload)
+        });
+      }
+      showToast('✅ Saved to Google Sheet!', 'success');
+    } catch(e) {
+      showToast('⚠️ Sheet sync failed — saved locally', 'error');
+    }
+  } else {
+    showToast('✅ Saved locally (no Sheet URL set)');
   }
 
-  function renderLog() {
-    const container = document.getElementById('log-container');
-    if (submissions.length === 0) { container.innerHTML = '<p class="empty-log">No entries yet.</p>'; return; }
-    container.innerHTML = submissions.slice().reverse().map(s => `
-      <div class="log-card">
-        <div class="log-card-header">
-          <span>${s.day} — ${s.meal} &nbsp;·&nbsp; ${s.students} students${s.school ? ' &nbsp;·&nbsp; ' + s.school : ''}</span>
-          <span class="status ${s.status === 'saved' ? 'status-saved' : 'status-pending'}">
-            ${s.status === 'saved' ? '☁️ Synced' : '📱 Local only'}
-          </span>
-        </div>
-        <table class="log-table">
-          <thead><tr><th>Item</th><th>Ingredient</th><th>Qty (kg)</th></tr></thead>
-          <tbody>${s.entries.map(e => `<tr><td>${e.item}</td><td>${e.ingredient}</td><td>${e.qty}</td></tr>`).join('')}</tbody>
-        </table>
-      </div>
-    `).join('');
-  }
+  // Show success screen
+  document.querySelectorAll('.section-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('success-screen').style.display = 'block';
+  document.getElementById('nav-bar').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
-  function showToast(msg, isError=false) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className = isError ? 'show error' : 'show';
-    clearTimeout(t._timer);
-    t._timer = setTimeout(() => t.className = '', 2800);
-  }
+function resetForm() {
+  currentSection = 0;
+  document.getElementById('success-screen').style.display = 'none';
+  document.getElementById('nav-bar').style.display = 'flex';
+  document.querySelectorAll('input[type="text"], input[type="number"], input[type="tel"], input[type="date"]').forEach(i => i.value = '');
+  document.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach(i => i.checked = false);
+  document.querySelectorAll('.check-label').forEach(l => l.classList.remove('checked'));
+  document.querySelectorAll('.radio-label').forEach(l => l.classList.remove('selected'));
+  document.querySelectorAll('[id^="tbody-"]').forEach(b => b.innerHTML = '');
+  Object.keys(mealRowCounts).forEach(k => mealRowCounts[k] = 0);
+  addMealRow('Monday-Breakfast'); addMealRow('Monday-Breakfast');
+  showSection(0);
+  // Restore next button
+  document.getElementById('btn-next').outerHTML = `<button class="btn-next" id="btn-next" onclick="goNext()">Next →</button>`;
+  updateProgress();
+}
+
+// ── CSV DOWNLOAD ──────────────────────────────────────────────────────
+function downloadCSV() {
+  if (allSubmissions.length === 0) { showToast('⚠️ No submissions yet', 'error'); return; }
+
+  let csv = 'Submitted At,School,Location,Teacher,Phone,Date,Meals Served,Day,Meal,Students,Item,Ingredient,Qty(kg),IFA Tablets\n';
+  allSubmissions.forEach(d => {
+    if (d.mealData && d.mealData.length > 0) {
+      d.mealData.forEach(row => {
+        csv += `"${d.submittedAt}","${d.school}","${d.location}","${d.teacher}","${d.phone}","${d.date}","${d.mealsServed}","${row.day}","${row.meal}","${row.students}","${row.item}","${row.ingredient}","${row.qty}","${d.ifaTablets}"\n`;
+      });
+    } else {
+      csv += `"${d.submittedAt}","${d.school}","${d.location}","${d.teacher}","${d.phone}","${d.date}","${d.mealsServed}","","","","","","","${d.ifaTablets}"\n`;
+    }
+  });
+
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `nutrition_survey_${new Date().toLocaleDateString('en-IN').replace(/\//g,'-')}.csv`;
+  a.click();
+  showToast('⬇ CSV downloaded!', 'success');
+}
+
+// ── TOAST ────────────────────────────────────────────────────────────
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = ['show', type].filter(Boolean).join(' ');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.className = '', 3000);
+}
 </script>
 </body>
 </html>
