@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Meal Raw Material Entry</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&family=Noto+Serif:wght@700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --green: #2e7d32;
+    --green-light: #e8f5e9;
+    --green-mid: #a5d6a7;
+    --accent: #f57f17;
+    --bg: #fafaf7;
+    --border: #c8d8c8;
+    --text: #1a2e1a;
+    --muted: #6a7f6a;
+    --white: #ffffff;
+    --shadow: 0 2px 12px rgba(46,125,50,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  header { background: var(--green); color: white; padding: 18px 20px 14px; text-align: center; }
+  header h1 { font-family: 'Noto Serif', serif; font-size: 1.25rem; letter-spacing: 0.01em; }
+  header p { font-size: 0.78rem; opacity: 0.85; margin-top: 4px; }
+
+  /* SETUP BANNER */
+  #setup-banner {
+    background: #fff8e1;
+    border-left: 4px solid var(--accent);
+    margin: 14px 16px 0;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 0.82rem;
+    line-height: 1.6;
+  }
+  #setup-banner strong { color: var(--accent); }
+  #setup-banner input {
+    width: 100%;
+    margin-top: 8px;
+    padding: 8px 10px;
+    border: 1.5px solid #ffe082;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-family: 'Noto Sans', sans-serif;
+    background: white;
+  }
+  #setup-banner input:focus { outline: none; border-color: var(--accent); }
+  .btn-save-url {
+    margin-top: 8px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 7px 16px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Noto Sans', sans-serif;
+  }
+  .btn-save-url:hover { background: #e65100; }
+  #url-status { font-size: 0.78rem; margin-top: 5px; color: var(--green); font-weight: 600; }
+
+  .container { max-width: 700px; margin: 0 auto; padding: 16px; }
+
+  .meta-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .field label { display: block; font-size: 0.72rem; font-weight: 600; color: var(--green); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .field select, .field input { width: 100%; padding: 9px 11px; border: 1.5px solid var(--border); border-radius: 7px; font-family: 'Noto Sans', sans-serif; font-size: 0.9rem; background: var(--white); color: var(--text); outline: none; transition: border-color 0.2s; }
+  .field select:focus, .field input:focus { border-color: var(--green); }
+
+  .card { background: var(--white); border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; margin-bottom: 16px; }
+  .card-header { background: var(--green); color: white; padding: 10px 16px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
+
+  .entry-table { width: 100%; border-collapse: collapse; }
+  .entry-table thead tr { background: var(--green-light); }
+  .entry-table th { padding: 9px 10px; font-size: 0.72rem; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 2px solid var(--green-mid); text-align: left; white-space: nowrap; }
+  .entry-table td { padding: 5px 6px; border-bottom: 1px solid #eef3ee; vertical-align: middle; }
+  .entry-table tr:last-child td { border-bottom: none; }
+  .entry-table tr:hover td { background: var(--green-light); }
+  .entry-table input[type="text"], .entry-table input[type="number"] {
+    width: 100%; padding: 7px 8px; border: 1.5px solid var(--border); border-radius: 6px;
+    font-family: 'Noto Sans', sans-serif; font-size: 0.85rem; background: transparent; color: var(--text); outline: none; transition: border-color 0.15s, background 0.15s;
+  }
+  .entry-table input:focus { border-color: var(--green); background: var(--white); }
+  .col-item { min-width: 110px; } .col-ingr { min-width: 110px; } .col-qty { width: 80px; } .col-del { width: 36px; text-align: center; }
+
+  .btn-del { background: none; border: none; cursor: pointer; color: #c62828; font-size: 1.1rem; padding: 2px 4px; border-radius: 4px; line-height: 1; transition: background 0.15s; }
+  .btn-del:hover { background: #ffebee; }
+
+  .btn-add-row { display: flex; align-items: center; gap: 6px; background: none; border: 1.5px dashed var(--green-mid); color: var(--green); font-family: 'Noto Sans', sans-serif; font-size: 0.82rem; font-weight: 600; padding: 8px 14px; margin: 8px 10px 10px; border-radius: 7px; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+  .btn-add-row:hover { background: var(--green-light); border-color: var(--green); }
+
+  /* Submit bar */
+  .submit-bar { position: sticky; bottom: 0; background: var(--bg); border-top: 1px solid var(--border); padding: 12px 16px; display: flex; gap: 10px; }
+  .btn-submit { flex: 1; background: var(--green); color: white; border: none; border-radius: 9px; padding: 13px; font-family: 'Noto Serif', serif; font-size: 1rem; font-weight: 700; cursor: pointer; letter-spacing: 0.02em; transition: background 0.2s, transform 0.1s; }
+  .btn-submit:hover { background: #1b5e20; }
+  .btn-submit:active { transform: scale(0.98); }
+  .btn-submit:disabled { background: #aaa; cursor: not-allowed; }
+  .btn-download { background: white; color: var(--green); border: 1.5px solid var(--green); border-radius: 9px; padding: 13px 14px; font-family: 'Noto Sans', sans-serif; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
+  .btn-download:hover { background: var(--green-light); }
+  .btn-clear { background: white; color: var(--muted); border: 1.5px solid var(--border); border-radius: 9px; padding: 13px 12px; font-family: 'Noto Sans', sans-serif; font-size: 0.82rem; cursor: pointer; }
+  .btn-clear:hover { background: #f5f5f5; }
+
+  /* Spinner */
+  .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Toast */
+  #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--green); color: white; padding: 12px 24px; border-radius: 30px; font-size: 0.9rem; font-weight: 600; box-shadow: 0 4px 20px rgba(0,0,0,0.15); opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 999; white-space: nowrap; }
+  #toast.show { opacity: 1; }
+  #toast.error { background: #c62828; }
+
+  /* Log */
+  #log-section { margin-top: 8px; margin-bottom: 100px; }
+  #log-section h2 { font-family: 'Noto Serif', serif; font-size: 1rem; color: var(--green); margin-bottom: 10px; }
+  .log-card { background: white; border-radius: 10px; box-shadow: var(--shadow); margin-bottom: 10px; overflow: hidden; }
+  .log-card-header { background: var(--green-light); padding: 8px 14px; font-size: 0.8rem; font-weight: 700; color: var(--green); display: flex; justify-content: space-between; }
+  .log-card-header .status { font-size: 0.72rem; font-weight: 600; }
+  .status-saved { color: var(--green); } .status-pending { color: var(--accent); }
+  .log-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  .log-table th { padding: 6px 10px; background: #f1f8f1; color: var(--muted); font-weight: 600; text-align: left; border-bottom: 1px solid var(--border); }
+  .log-table td { padding: 6px 10px; border-bottom: 1px solid #f0f0f0; }
+  .log-table tr:last-child td { border-bottom: none; }
+  .empty-log { color: var(--muted); font-size: 0.85rem; text-align: center; padding: 20px; }
+
+  @media (max-width: 480px) {
+    .meta-row { grid-template-columns: 1fr; }
+    .entry-table th, .entry-table td { padding: 5px 4px; }
+    .col-item, .col-ingr { min-width: 90px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🍱 Meal Raw Material Entry</h1>
+  <p>Residential School — Daily Record</p>
+</header>
+
+<!-- Setup Banner -->
+<div id="setup-banner">
+  <strong>⚙️ One-time setup:</strong> Paste your Google Apps Script Web App URL below so submissions are saved to your Google Sheet automatically.
+  <input type="text" id="script-url-input" placeholder="https://script.google.com/macros/s/YOUR_ID/exec" />
+  <br/>
+  <button class="btn-save-url" onclick="saveScriptUrl()">Save URL</button>
+  <div id="url-status"></div>
+</div>
+
+<div class="container">
+
+  <div style="margin-top:16px;">
+    <div class="meta-row">
+      <div class="field">
+        <label>Day</label>
+        <select id="meta-day">
+          <option value="">Select day</option>
+          <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+          <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Meal</label>
+        <select id="meta-meal">
+          <option value="">Select meal</option>
+          <option>Breakfast</option><option>Lunch</option><option>Dinner</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>No. of Students</label>
+        <input type="number" id="meta-students" placeholder="e.g. 200" min="1"/>
+      </div>
+      <div class="field">
+        <label>School / Respondent</label>
+        <input type="text" id="meta-school" placeholder="Name or school"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span>Ingredients Used</span>
+      <span style="opacity:0.7;font-size:0.72rem;">one row per ingredient</span>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="entry-table" id="entry-table">
+        <thead>
+          <tr>
+            <th class="col-item">Item (Dish)</th>
+            <th class="col-ingr">Ingredient</th>
+            <th class="col-qty">Qty (kg)</th>
+            <th class="col-del"></th>
+          </tr>
+        </thead>
+        <tbody id="entry-body"></tbody>
+      </table>
+    </div>
+    <button class="btn-add-row" onclick="addRow()">＋ Add Ingredient Row</button>
+  </div>
+
+  <div id="log-section">
+    <h2>📋 This Session's Entries</h2>
+    <div id="log-container"><p class="empty-log">No entries yet.</p></div>
+  </div>
+
+</div>
+
+<div class="submit-bar">
+  <button class="btn-clear" onclick="clearForm()">Clear</button>
+  <button class="btn-download" onclick="downloadCSV()">⬇ CSV</button>
+  <button class="btn-submit" id="submit-btn" onclick="submitEntry()">✓ Submit</button>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  const DISHES = ['Idli','Sambar','Chutney','Chapati','Mix Veg Sabji','Rice','Vegetable Khichdi','Papad','Dal','Poha','Upma','Puri','Kheer'];
+  const INGREDIENTS = ['Rice','Urad Dal','Toor Dal','Wheat Flour','Oil','Carrot','Pumpkin','Sambar Powder','Coconut','Curd','Coriander','Potato','Cauliflower','Green Peas','Onion','Tomato','Beans','Salt','Turmeric'];
+
+  let rowCount = 0;
+  let submissions = [];
+  let SCRIPT_URL = localStorage.getItem('meal_script_url') || '';
+
+  // Init URL display
+  window.addEventListener('DOMContentLoaded', () => {
+    if (SCRIPT_URL) {
+      document.getElementById('script-url-input').value = SCRIPT_URL;
+      document.getElementById('url-status').textContent = '✅ URL saved. Submissions will go to your Google Sheet.';
+      document.getElementById('setup-banner').style.borderColor = '#a5d6a7';
+    }
+    makeDatalist('dl-dishes', DISHES);
+    makeDatalist('dl-ingr', INGREDIENTS);
+    addRow(); addRow(); addRow();
+  });
+
+  function saveScriptUrl() {
+    const val = document.getElementById('script-url-input').value.trim();
+    if (!val.startsWith('https://script.google.com')) {
+      document.getElementById('url-status').textContent = '⚠️ That doesn\'t look like a valid Apps Script URL.';
+      document.getElementById('url-status').style.color = '#c62828';
+      return;
+    }
+    SCRIPT_URL = val;
+    localStorage.setItem('meal_script_url', SCRIPT_URL);
+    document.getElementById('url-status').textContent = '✅ URL saved!';
+    document.getElementById('url-status').style.color = '#2e7d32';
+    document.getElementById('setup-banner').style.borderColor = '#a5d6a7';
+  }
+
+  function makeDatalist(id, items) {
+    if (document.getElementById(id)) return;
+    const dl = document.createElement('datalist');
+    dl.id = id;
+    items.forEach(i => { const o = document.createElement('option'); o.value = i; dl.appendChild(o); });
+    document.body.appendChild(dl);
+  }
+
+  function addRow(dish='', ingredient='', qty='') {
+    rowCount++;
+    const tbody = document.getElementById('entry-body');
+    const tr = document.createElement('tr');
+    tr.id = 'row-' + rowCount;
+    tr.innerHTML = `
+      <td class="col-item"><input type="text" list="dl-dishes" placeholder="e.g. Idli" value="${dish}" /></td>
+      <td class="col-ingr"><input type="text" list="dl-ingr" placeholder="e.g. Rice" value="${ingredient}" /></td>
+      <td class="col-qty"><input type="number" min="0" step="0.1" placeholder="0.0" value="${qty}" /></td>
+      <td class="col-del"><button class="btn-del" onclick="deleteRow('row-${rowCount}')" title="Remove">✕</button></td>
+    `;
+    tbody.appendChild(tr);
+    tr.querySelector('input').focus();
+  }
+
+  function deleteRow(id) { const r = document.getElementById(id); if (r) r.remove(); }
+
+  function clearForm() {
+    document.getElementById('meta-day').value = '';
+    document.getElementById('meta-meal').value = '';
+    document.getElementById('meta-students').value = '';
+    document.getElementById('meta-school').value = '';
+    document.getElementById('entry-body').innerHTML = '';
+    rowCount = 0;
+    addRow(); addRow(); addRow();
+  }
+
+  function collectRows() {
+    const rows = document.querySelectorAll('#entry-body tr');
+    let entries = [], hasError = false;
+    rows.forEach(row => {
+      const inputs = row.querySelectorAll('input');
+      const item = inputs[0].value.trim();
+      const ingr = inputs[1].value.trim();
+      const qty  = inputs[2].value.trim();
+      if (!item || !ingr || !qty) { hasError = true; return; }
+      entries.push({ item, ingredient: ingr, qty: parseFloat(qty) });
+    });
+    return { entries, hasError };
+  }
+
+  async function submitEntry() {
+    const day      = document.getElementById('meta-day').value;
+    const meal     = document.getElementById('meta-meal').value;
+    const students = document.getElementById('meta-students').value;
+    const school   = document.getElementById('meta-school').value.trim();
+
+    if (!day || !meal || !students) { showToast('⚠️ Fill in Day, Meal and No. of Students', true); return; }
+    const { entries, hasError } = collectRows();
+    if (entries.length === 0) { showToast('⚠️ Add at least one ingredient row', true); return; }
+    if (hasError) { showToast('⚠️ Some rows are incomplete — check all fields', true); return; }
+
+    const submission = { day, meal, students, school, entries, time: new Date().toLocaleTimeString(), status: 'pending' };
+
+    // Send to Google Sheet if URL is set
+    if (SCRIPT_URL) {
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>Saving…';
+      try {
+        // Send one row per ingredient to the sheet
+        for (const e of entries) {
+          await fetch(SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              timestamp: new Date().toISOString(),
+              school: school || '—',
+              day, meal, students,
+              item: e.item,
+              ingredient: e.ingredient,
+              qty: e.qty
+            })
+          });
+        }
+        submission.status = 'saved';
+        showToast('✅ Saved to Google Sheet!');
+      } catch (err) {
+        submission.status = 'pending';
+        showToast('⚠️ Sheet unavailable — entry kept locally', true);
+      }
+      btn.disabled = false;
+      btn.innerHTML = '✓ Submit';
+    } else {
+      showToast('✅ Entry saved locally (set Sheet URL to sync)');
+    }
+
+    submissions.push(submission);
+    renderLog();
+    clearForm();
+  }
+
+  function downloadCSV() {
+    if (submissions.length === 0) { showToast('⚠️ No entries to download yet', true); return; }
+    let csv = 'Timestamp,School,Day,Meal,Students,Item,Ingredient,Qty(kg),Status\n';
+    submissions.forEach(s => {
+      s.entries.forEach(e => {
+        csv += `"${s.time}","${s.school||''}","${s.day}","${s.meal}","${s.students}","${e.item}","${e.ingredient}","${e.qty}","${s.status}"\n`;
+      });
+    });
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `meal_record_${new Date().toLocaleDateString('en-IN').replace(/\//g,'-')}.csv`;
+    a.click();
+  }
+
+  function renderLog() {
+    const container = document.getElementById('log-container');
+    if (submissions.length === 0) { container.innerHTML = '<p class="empty-log">No entries yet.</p>'; return; }
+    container.innerHTML = submissions.slice().reverse().map(s => `
+      <div class="log-card">
+        <div class="log-card-header">
+          <span>${s.day} — ${s.meal} &nbsp;·&nbsp; ${s.students} students${s.school ? ' &nbsp;·&nbsp; ' + s.school : ''}</span>
+          <span class="status ${s.status === 'saved' ? 'status-saved' : 'status-pending'}">
+            ${s.status === 'saved' ? '☁️ Synced' : '📱 Local only'}
+          </span>
+        </div>
+        <table class="log-table">
+          <thead><tr><th>Item</th><th>Ingredient</th><th>Qty (kg)</th></tr></thead>
+          <tbody>${s.entries.map(e => `<tr><td>${e.item}</td><td>${e.ingredient}</td><td>${e.qty}</td></tr>`).join('')}</tbody>
+        </table>
+      </div>
+    `).join('');
+  }
+
+  function showToast(msg, isError=false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = isError ? 'show error' : 'show';
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.className = '', 2800);
+  }
+</script>
+</body>
+</html>
